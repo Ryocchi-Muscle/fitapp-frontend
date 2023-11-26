@@ -1,34 +1,74 @@
 "use client";
-import type { NextPage } from "next";
-import useSWR from "swr";
+// import { AppProps } from "next/app";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { getCurrentUser } from "../api/auth";
+
+import AuthProvider from "./compornents/AuthProvider";
 import GuestLogin from "./compornents/GuestLogin";
+import Home from "./compornents/Home";
 import SignIn from "./compornents/SignIn";
 import SignUp from "./compornents/SignUp";
-import { fetcher } from "@/utils";
 
-const Index: NextPage = () => {
-  const url = "http://localhost:3000/api/v1/health_check";
-  const { data, error } = useSWR(url, fetcher);
+function App({ SignUp, SignIn, GuestLogin }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState();
 
-  if (error) return <div>An error has occurred.</div>;
-  if (!data) return <div>Loading...</div>;
+  const handleGetCurrentUser = async () => {
+    try {
+      const res = await getCurrentUser();
+      console.log(res?.data.isLogin);
+      if (res?.data.isLogin === true) {
+        setIsSignedIn(true);
+        setCurrentUser(res?.data.data);
+      } else {
+        console.log("no current user");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    handleGetCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    // ページがロードされた後に実行される
+    if (!isSignedIn) {
+      // isSignedInがfalseの場合、SignInページへ遷移
+      router.push("/signin");
+    }
+  }, [isSignedIn, router]);
 
   return (
     <>
-      {/* <div>Rails疎通確認</div>
-      <div>レスポンスメッセージ: {data.message}</div> */}
-      <main className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-400 ">
-        <h1 className="text-4xl font-bold -mt-32">Fit App</h1>
-        <div className="w-full max-w-xl mt-5">
-          <div className="w-full bg-white shadow-md px-8 py-6 rounded-lg">
-            <SignIn />
-            <SignUp />
-            <GuestLogin />
+      <AuthProvider
+        value={{
+          loading,
+          setLoading,
+          isSignedIn,
+          setIsSignedIn,
+          currentUser,
+          setCurrentUser,
+        }}
+      >
+        <main className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-400 ">
+          <h1 className="text-4xl font-bold -mt-32">Fit App</h1>
+          <div className="w-full max-w-xl mt-5">
+            <div className="w-full bg-white shadow-md px-8 py-6 rounded-lg">
+              <SignUp />
+              {isSignedIn ? <Home /> : <SignIn />}
+              <GuestLogin />
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </AuthProvider>
     </>
   );
-};
+}
 
-export default Index;
+export default App;

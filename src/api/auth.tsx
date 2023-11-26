@@ -8,7 +8,7 @@ export const signUp = (params: string) => {
 };
 
 // サインイン
-export const signIn = (params: string) => {
+export const signIn = (params: { email: string; password: string }) => {
   return client.post("/auth/sign_in", params);
 };
 
