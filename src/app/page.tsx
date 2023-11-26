@@ -34,15 +34,7 @@ function App({ SignUp, SignIn, GuestLogin }) {
 
   useEffect(() => {
     handleGetCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    // ページがロードされた後に実行される
-    if (!isSignedIn) {
-      // isSignedInがfalseの場合、SignInページへ遷移
-      router.push("/signin");
-    }
-  }, [isSignedIn, router]);
+  }, [isSignedIn]);
 
   return (
     <>
