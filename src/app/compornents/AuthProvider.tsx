@@ -1,4 +1,4 @@
-import { AuthContext, AuthContextType } from "@/context/context";
+import { AuthContext, AuthContextType } from "@/app/context/context";
 
 type Props = {
   value: AuthContextType;
