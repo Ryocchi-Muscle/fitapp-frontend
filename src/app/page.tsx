@@ -1,6 +1,6 @@
 "use client";
 // import { AppProps } from "next/app";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../api/auth";
 
@@ -10,8 +10,9 @@ import Home from "./compornents/Home";
 import SignIn from "./compornents/SignIn";
 import SignUp from "./compornents/SignUp";
 
-function App({ SignUp, SignIn, GuestLogin }) {
-  const router = useRouter();
+function App() {
+  // const router = useRouter();
+
   const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState();

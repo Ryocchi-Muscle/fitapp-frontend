@@ -1,10 +1,10 @@
 "use client";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { signIn } from "@/api/auth";
-import { AuthContext } from "@/app/page";
+import { AuthContext } from "@/app/context/context";
 
 const SignIn = () => {
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext);
